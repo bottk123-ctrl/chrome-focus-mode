@@ -1,0 +1,79 @@
+const QUOTES = [
+  "Дисциплина — это выбор между тем, чего ты хочешь сейчас, и тем, чего хочешь больше всего.",
+  "Успех — это сумма маленьких усилий, повторяемых изо дня в день.",
+  "Не жди подходящего момента. Возьми момент и сделай его подходящим.",
+  "Ты всегда можешь вернуться к работе. Начни с одной минуты.",
+  "Сфокусируйся на цели, а не на отвлечениях.",
+  "Тот, кто владеет своим временем, владеет своей жизнью.",
+  "Сделай сегодня то, что приблизит тебя к мечте.",
+  "Терпение и труд всё перетрут."
+];
+
+function randomQuote() {
+  return QUOTES[Math.floor(Math.random() * QUOTES.length)];
+}
+
+function showBlockScreen() {
+  if (document.getElementById("focus-mode-block")) return;
+
+  document.documentElement.classList.add("focus-mode-active");
+  document.body.innerHTML = "";
+
+  const overlay = document.createElement("div");
+  overlay.id = "focus-mode-block";
+  overlay.innerHTML = `
+    <div class="focus-mode-content">
+      <h1>Вернись к работе!</h1>
+      <p class="focus-mode-quote">«${randomQuote()}»</p>
+      <p class="focus-mode-timer" id="focus-mode-timer"></p>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+  updateBlockTimer();
+}
+
+function updateBlockTimer() {
+  const el = document.getElementById("focus-mode-timer");
+  if (!el) return;
+  chrome.storage.local.get(["endTime"], (data) => {
+    const remaining = Math.max(0, Math.ceil((data.endTime - Date.now()) / 60000));
+    el.textContent = `Осталось: ${remaining} мин`;
+  });
+}
+
+function blockIfActive() {
+  chrome.storage.local.get(["isActive", "endTime"], (data) => {
+    if (data.isActive && Date.now() < data.endTime) {
+      showBlockScreen();
+    } else if (data.isActive && Date.now() >= data.endTime) {
+      chrome.storage.local.set({ isActive: false, endTime: 0 });
+    }
+  });
+}
+
+blockIfActive();
+
+chrome.storage.onChanged.addListener((changes, area) => {
+  if (area !== "local") return;
+  if (changes.isActive || changes.endTime) {
+    blockIfActive();
+    if (changes.isActive && changes.isActive.newValue === false) {
+      location.reload();
+    }
+  }
+});
+
+setInterval(() => {
+  chrome.storage.local.get(["isActive", "endTime"], (data) => {
+    if (!data.isActive) {
+      if (document.getElementById("focus-mode-block")) location.reload();
+      return;
+    }
+    if (Date.now() >= data.endTime) {
+      chrome.storage.local.set({ isActive: false, endTime: 0 });
+      location.reload();
+      return;
+    }
+    updateBlockTimer();
+  });
+}, 1000);

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Focus Mode</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      width: 240px;
+      padding: 16px;
+      background: #1e1e1e;
+      color: #f0f0f0;
+      font-family: -apple-system, Segoe UI, Roboto, sans-serif;
+    }
+    h1 {
+      margin: 0 0 12px;
+      font-size: 16px;
+      font-weight: 600;
+    }
+    input[type="number"] {
+      width: 100%;
+      padding: 8px 10px;
+      margin-bottom: 12px;
+      border: 1px solid #3a3a3a;
+      border-radius: 6px;
+      background: #2a2a2a;
+      color: #f0f0f0;
+      font-size: 14px;
+      outline: none;
+    }
+    input[type="number"]:focus { border-color: #6c8cff; }
+    button {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 8px;
+      border: none;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      color: #fff;
+    }
+    #startBtn { background: #3d6cff; }
+    #startBtn:hover { background: #2f5ae0; }
+    #stopBtn { background: #3a3a3a; }
+    #stopBtn:hover { background: #4a4a4a; }
+    #status {
+      margin-top: 10px;
+      font-size: 13px;
+      color: #9a9a9a;
+      text-align: center;
+      min-height: 18px;
+    }
+    #status.active { color: #6cd07a; }
+  </style>
+</head>
+<body>
+  <h1>Focus Mode</h1>
+  <input id="minutes" type="number" min="1" value="25" placeholder="Минуты">
+  <button id="startBtn">Включить фокус</button>
+  <button id="stopBtn">Выключить</button>
+  <div id="status"></div>
+  <script src="popup.js"></script>
+</body>
+</html>

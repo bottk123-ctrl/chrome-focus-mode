@@ -1,0 +1,42 @@
+#focus-mode-block {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 2147483647;
+  background: #d32f2f;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-family: -apple-system, Segoe UI, Roboto, sans-serif;
+}
+
+#focus-mode-block .focus-mode-content {
+  max-width: 600px;
+  padding: 24px;
+}
+
+#focus-mode-block h1 {
+  font-size: 56px;
+  font-weight: 800;
+  margin: 0 0 24px;
+  line-height: 1.1;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+#focus-mode-block .focus-mode-quote {
+  font-size: 20px;
+  font-style: italic;
+  margin: 0 0 32px;
+  opacity: 0.95;
+}
+
+#focus-mode-block .focus-mode-timer {
+  font-size: 16px;
+  font-weight: 600;
+  opacity: 0.85;
+}
