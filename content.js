@@ -13,6 +13,33 @@ function randomQuote() {
   return QUOTES[Math.floor(Math.random() * QUOTES.length)];
 }
 
+function normalizeEntry(entry) {
+  return String(entry || "")
+    .trim()
+    .toLowerCase()
+    .replace(/^https?:\/\//, "")
+    .replace(/^www\./, "")
+    .replace(/\/.*$/, "");
+}
+
+function hostMatches(host, entry) {
+  const e = normalizeEntry(entry);
+  if (!e) return false;
+  const h = String(host || "").toLowerCase();
+  return h === e || h.endsWith("." + e);
+}
+
+function isBlocked(host, data) {
+  const mode = data.mode === "list" ? "list" : "all";
+  const sites = Array.isArray(data.sites) ? data.sites : [];
+  const allowSites = Array.isArray(data.allowSites) ? data.allowSites : [];
+
+  if (mode === "list") {
+    return sites.some((e) => hostMatches(host, e));
+  }
+  return !allowSites.some((e) => hostMatches(host, e));
+}
+
 function showBlockScreen() {
   if (document.getElementById("focus-mode-block")) return;
 
@@ -36,16 +63,22 @@ function updateBlockTimer() {
   const el = document.getElementById("focus-mode-timer");
   if (!el) return;
   chrome.storage.local.get(["endTime"], (data) => {
-    const remaining = Math.max(0, Math.ceil((data.endTime - Date.now()) / 60000));
+    const endTime = Number(data.endTime) || 0;
+    if (!endTime) {
+      el.textContent = "";
+      return;
+    }
+    const remaining = Math.max(0, Math.ceil((endTime - Date.now()) / 60000));
     el.textContent = `Осталось: ${remaining} мин`;
   });
 }
 
 function blockIfActive() {
-  chrome.storage.local.get(["isActive", "endTime"], (data) => {
-    if (data.isActive && Date.now() < data.endTime) {
+  chrome.storage.local.get(["isActive", "endTime", "mode", "sites", "allowSites"], (data) => {
+    const stillActive = data.isActive && Date.now() < (Number(data.endTime) || 0);
+    if (stillActive && isBlocked(location.hostname, data)) {
       showBlockScreen();
-    } else if (data.isActive && Date.now() >= data.endTime) {
+    } else if (data.isActive && Date.now() >= (Number(data.endTime) || 0)) {
       chrome.storage.local.set({ isActive: false, endTime: 0 });
     }
   });
@@ -55,7 +88,7 @@ blockIfActive();
 
 chrome.storage.onChanged.addListener((changes, area) => {
   if (area !== "local") return;
-  if (changes.isActive || changes.endTime) {
+  if (changes.isActive || changes.endTime || changes.mode || changes.sites || changes.allowSites) {
     blockIfActive();
     if (changes.isActive && changes.isActive.newValue === false) {
       location.reload();
@@ -69,7 +102,7 @@ setInterval(() => {
       if (document.getElementById("focus-mode-block")) location.reload();
       return;
     }
-    if (Date.now() >= data.endTime) {
+    if (Date.now() >= (Number(data.endTime) || 0)) {
       chrome.storage.local.set({ isActive: false, endTime: 0 });
       location.reload();
       return;
