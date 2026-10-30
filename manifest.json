@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Focus Mode",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Блокировщик отвлекающих сайтов",
   "permissions": ["storage"],
   "icons": {
