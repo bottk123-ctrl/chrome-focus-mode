@@ -40,11 +40,27 @@ function isBlocked(host, data) {
   return !allowSites.some((e) => hostMatches(host, e));
 }
 
+function mountOverlay(overlay) {
+  if (document.body) {
+    document.body.innerHTML = "";
+    document.body.appendChild(overlay);
+    return;
+  }
+  document.addEventListener(
+    "DOMContentLoaded",
+    () => {
+      if (!document.body) return;
+      document.body.innerHTML = "";
+      document.body.appendChild(overlay);
+    },
+    { once: true }
+  );
+}
+
 function showBlockScreen() {
   if (document.getElementById("focus-mode-block")) return;
 
   document.documentElement.classList.add("focus-mode-active");
-  document.body.innerHTML = "";
 
   const overlay = document.createElement("div");
   overlay.id = "focus-mode-block";
@@ -55,7 +71,7 @@ function showBlockScreen() {
       <p class="focus-mode-timer" id="focus-mode-timer"></p>
     </div>
   `;
-  document.body.appendChild(overlay);
+  mountOverlay(overlay);
   updateBlockTimer();
 }
 
