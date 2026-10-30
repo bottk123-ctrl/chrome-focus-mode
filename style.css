@@ -16,11 +16,11 @@
 
 #focus-mode-block .focus-mode-content {
   max-width: 600px;
-  padding: 24px;
+  padding: clamp(16px, 5vw, 32px);
 }
 
 #focus-mode-block h1 {
-  font-size: 56px;
+  font-size: clamp(32px, 9vw, 56px);
   font-weight: 800;
   margin: 0 0 24px;
   line-height: 1.1;
@@ -29,7 +29,7 @@
 }
 
 #focus-mode-block .focus-mode-quote {
-  font-size: 20px;
+  font-size: clamp(16px, 4vw, 20px);
   font-style: italic;
   margin: 0 0 32px;
   opacity: 0.95;
