@@ -90,9 +90,12 @@ function updateBlockTimer() {
 }
 
 function blockIfActive() {
+  const host = location.hostname;
+  if (!host) return;
+
   chrome.storage.local.get(["isActive", "endTime", "mode", "sites", "allowSites"], (data) => {
     const stillActive = data.isActive && Date.now() < (Number(data.endTime) || 0);
-    if (stillActive && isBlocked(location.hostname, data)) {
+    if (stillActive && isBlocked(host, data)) {
       showBlockScreen();
     } else if (data.isActive && Date.now() >= (Number(data.endTime) || 0)) {
       chrome.storage.local.set({ isActive: false, endTime: 0 });
