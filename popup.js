@@ -147,4 +147,23 @@ chrome.storage.local.get(["isActive", "endTime"], (data) => {
   }
 });
 
+chrome.storage.onChanged.addListener((changes, area) => {
+  if (area !== "local") return;
+  if (!changes.isActive && !changes.endTime) return;
+
+  chrome.storage.local.get(["isActive", "endTime"], (data) => {
+    const active = data.isActive && Number(data.endTime) > Date.now();
+    if (active) {
+      render(getRemainingMinutes(Number(data.endTime)));
+      if (!intervalId) intervalId = setInterval(tick, 1000);
+    } else {
+      if (intervalId) {
+        clearInterval(intervalId);
+        intervalId = null;
+      }
+      renderIdle();
+    }
+  });
+});
+
 loadSettings();
