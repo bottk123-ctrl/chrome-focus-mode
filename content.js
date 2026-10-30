@@ -57,16 +57,20 @@ function markActive() {
   );
 }
 
+let overlayPending = false;
+
 function mountOverlay(overlay) {
   if (document.body) {
     document.body.innerHTML = "";
     document.body.appendChild(overlay);
     return;
   }
+  overlayPending = true;
   document.addEventListener(
     "DOMContentLoaded",
     () => {
-      if (!document.body) return;
+      if (!overlayPending || !document.body) return;
+      overlayPending = false;
       document.body.innerHTML = "";
       document.body.appendChild(overlay);
     },
@@ -75,7 +79,7 @@ function mountOverlay(overlay) {
 }
 
 function showBlockScreen() {
-  if (document.getElementById("focus-mode-block")) return;
+  if (overlayPending || document.getElementById("focus-mode-block")) return;
 
   markActive();
 
@@ -146,6 +150,7 @@ function stopPolling() {
 }
 
 function unblock() {
+  overlayPending = false;
   stopPolling();
   if (document.getElementById("focus-mode-block")) location.reload();
 }
