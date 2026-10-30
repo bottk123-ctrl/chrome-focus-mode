@@ -87,7 +87,14 @@ function listKey(mode) {
 function parseList(text) {
   return text
     .split(/[\n,]/)
-    .map((s) => s.trim().toLowerCase().replace(/^https?:\/\//, "").replace(/\/.*$/, ""))
+    .map((s) =>
+      s
+        .trim()
+        .toLowerCase()
+        .replace(/^https?:\/\//, "")
+        .replace(/^www\./, "")
+        .replace(/\/.*$/, "")
+    )
     .filter(Boolean);
 }
 
