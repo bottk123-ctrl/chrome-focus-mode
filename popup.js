@@ -22,12 +22,14 @@ function render(remaining) {
   statusEl.textContent = `Осталось: ${remaining} мин`;
   statusEl.classList.add("active");
   startBtn.textContent = `Включено (${remaining} мин)`;
+  stopBtn.disabled = false;
 }
 
 function renderIdle() {
   statusEl.textContent = "";
   statusEl.classList.remove("active");
   startBtn.textContent = "Включить фокус";
+  stopBtn.disabled = true;
 }
 
 function tick() {
