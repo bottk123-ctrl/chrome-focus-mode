@@ -73,6 +73,7 @@ function showBlockScreen() {
   `;
   mountOverlay(overlay);
   updateBlockTimer();
+  startPolling();
 }
 
 function updateBlockTimer() {
@@ -94,13 +95,41 @@ function blockIfActive() {
   if (!host) return;
 
   chrome.storage.local.get(["isActive", "endTime", "mode", "sites", "allowSites"], (data) => {
-    const stillActive = data.isActive && Date.now() < (Number(data.endTime) || 0);
-    if (stillActive && isBlocked(host, data)) {
+    const active = data.isActive && Date.now() < (Number(data.endTime) || 0);
+    if (active && isBlocked(host, data)) {
       showBlockScreen();
-    } else if (data.isActive && Date.now() >= (Number(data.endTime) || 0)) {
-      chrome.storage.local.set({ isActive: false, endTime: 0 });
+    } else if (document.getElementById("focus-mode-block")) {
+      unblock();
     }
   });
+}
+
+let pollId = null;
+
+function startPolling() {
+  if (pollId) return;
+  pollId = setInterval(() => {
+    chrome.storage.local.get(["isActive", "endTime"], (data) => {
+      const active = data.isActive && Date.now() < (Number(data.endTime) || 0);
+      if (!active) {
+        if (data.isActive) chrome.storage.local.set({ isActive: false, endTime: 0 });
+        unblock();
+        return;
+      }
+      updateBlockTimer();
+    });
+  }, 1000);
+}
+
+function stopPolling() {
+  if (!pollId) return;
+  clearInterval(pollId);
+  pollId = null;
+}
+
+function unblock() {
+  stopPolling();
+  if (document.getElementById("focus-mode-block")) location.reload();
 }
 
 blockIfActive();
@@ -109,23 +138,5 @@ chrome.storage.onChanged.addListener((changes, area) => {
   if (area !== "local") return;
   if (changes.isActive || changes.endTime || changes.mode || changes.sites || changes.allowSites) {
     blockIfActive();
-    if (changes.isActive && changes.isActive.newValue === false) {
-      location.reload();
-    }
   }
 });
-
-setInterval(() => {
-  chrome.storage.local.get(["isActive", "endTime"], (data) => {
-    if (!data.isActive) {
-      if (document.getElementById("focus-mode-block")) location.reload();
-      return;
-    }
-    if (Date.now() >= (Number(data.endTime) || 0)) {
-      chrome.storage.local.set({ isActive: false, endTime: 0 });
-      location.reload();
-      return;
-    }
-    updateBlockTimer();
-  });
-}, 1000);
