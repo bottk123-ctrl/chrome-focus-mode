@@ -64,6 +64,7 @@ function showBlockScreen() {
 
   const overlay = document.createElement("div");
   overlay.id = "focus-mode-block";
+  overlay.setAttribute("role", "alert");
   overlay.innerHTML = `
     <div class="focus-mode-content">
       <h1>Вернись к работе!</h1>
