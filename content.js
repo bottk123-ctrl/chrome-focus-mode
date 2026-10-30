@@ -40,6 +40,23 @@ function isBlocked(host, data) {
   return !allowSites.some((e) => hostMatches(host, e));
 }
 
+function markActive() {
+  const root = document.documentElement;
+  if (root) {
+    root.classList.add("focus-mode-active");
+    return;
+  }
+  document.addEventListener(
+    "DOMContentLoaded",
+    () => {
+      if (document.documentElement) {
+        document.documentElement.classList.add("focus-mode-active");
+      }
+    },
+    { once: true }
+  );
+}
+
 function mountOverlay(overlay) {
   if (document.body) {
     document.body.innerHTML = "";
@@ -60,7 +77,7 @@ function mountOverlay(overlay) {
 function showBlockScreen() {
   if (document.getElementById("focus-mode-block")) return;
 
-  document.documentElement.classList.add("focus-mode-active");
+  markActive();
 
   const overlay = document.createElement("div");
   overlay.id = "focus-mode-block";
