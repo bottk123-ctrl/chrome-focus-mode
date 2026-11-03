@@ -1,5 +1,6 @@
 # 🎯 Focus Mode
 
+[![CI](https://github.com/bottk123-ctrl/chrome-focus-mode/actions/workflows/ci.yml/badge.svg)](https://github.com/bottk123-ctrl/chrome-focus-mode/actions/workflows/ci.yml)
 [![Manifest V3](https://img.shields.io/badge/Manifest-V3-4285F4?logo=googlechrome&logoColor=white)](https://developer.chrome.com/docs/extensions/develop/migrate/what-is-mv3)
 [![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?logo=javascript&logoColor=black)](https://developer.mozilla.org/docs/Web/JavaScript)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
