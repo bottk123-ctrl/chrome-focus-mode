@@ -134,6 +134,12 @@ function loadSettings() {
 startBtn.addEventListener("click", startTimer);
 stopBtn.addEventListener("click", stopTimer);
 sitesEl.addEventListener("input", scheduleSave);
+minutesInput.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") {
+    e.preventDefault();
+    startTimer();
+  }
+});
 
 modeSel.addEventListener("change", () => {
   saveCurrentList();
