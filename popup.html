@@ -94,16 +94,16 @@
 </head>
 <body>
   <h1>Focus Mode</h1>
-  <input id="minutes" type="number" min="1" max="600" value="25" placeholder="Минуты" autofocus>
-  <div class="presets" id="presets">
-    <button type="button" data-minutes="15">15</button>
-    <button type="button" data-minutes="25">25</button>
-    <button type="button" data-minutes="45">45</button>
-    <button type="button" data-minutes="60">60</button>
+  <input id="minutes" type="number" min="1" max="600" value="25" placeholder="Минуты" aria-label="Длительность в минутах" autofocus>
+  <div class="presets" id="presets" role="group" aria-label="Быстрый выбор длительности">
+    <button type="button" data-minutes="15" aria-label="15 минут">15</button>
+    <button type="button" data-minutes="25" aria-label="25 минут">25</button>
+    <button type="button" data-minutes="45" aria-label="45 минут">45</button>
+    <button type="button" data-minutes="60" aria-label="60 минут">60</button>
   </div>
   <button id="startBtn">Включить фокус</button>
   <button id="stopBtn">Выключить</button>
-  <div id="status"></div>
+  <div id="status" role="status" aria-live="polite"></div>
 
   <label class="field">
     <span>Режим блокировки</span>
