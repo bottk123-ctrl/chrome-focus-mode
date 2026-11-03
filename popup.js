@@ -6,6 +6,7 @@ const modeSel = document.getElementById("mode");
 const sitesEl = document.getElementById("sites");
 const sitesLabel = document.getElementById("sitesLabel");
 const sitesHint = document.getElementById("sitesHint");
+const presetsEl = document.getElementById("presets");
 
 const MIN_MINUTES = 1;
 const MAX_MINUTES = 600;
@@ -141,6 +142,13 @@ minutesInput.addEventListener("keydown", (e) => {
     e.preventDefault();
     startTimer();
   }
+});
+
+presetsEl.addEventListener("click", (e) => {
+  const btn = e.target.closest("button[data-minutes]");
+  if (!btn) return;
+  minutesInput.value = btn.dataset.minutes;
+  minutesInput.focus();
 });
 
 modeSel.addEventListener("change", () => {

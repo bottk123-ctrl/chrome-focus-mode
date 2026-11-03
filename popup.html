@@ -51,6 +51,23 @@
     #stopBtn { background: #3a3a3a; }
     #stopBtn:hover { background: #4a4a4a; }
     button:disabled { opacity: 0.45; cursor: not-allowed; }
+    .presets {
+      display: flex;
+      gap: 6px;
+      margin: -4px 0 12px;
+    }
+    .presets button {
+      width: auto;
+      flex: 1;
+      margin: 0;
+      padding: 6px 0;
+      background: #2a2a2a;
+      border: 1px solid #3a3a3a;
+      color: #d0d0d0;
+      font-size: 13px;
+      font-weight: 500;
+    }
+    .presets button:hover { background: #343434; }
     #status {
       margin-top: 10px;
       font-size: 13px;
@@ -78,6 +95,12 @@
 <body>
   <h1>Focus Mode</h1>
   <input id="minutes" type="number" min="1" max="600" value="25" placeholder="Минуты" autofocus>
+  <div class="presets" id="presets">
+    <button type="button" data-minutes="15">15</button>
+    <button type="button" data-minutes="25">25</button>
+    <button type="button" data-minutes="45">45</button>
+    <button type="button" data-minutes="60">60</button>
+  </div>
   <button id="startBtn">Включить фокус</button>
   <button id="stopBtn">Выключить</button>
   <div id="status"></div>
