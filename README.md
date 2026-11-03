@@ -62,8 +62,10 @@ chrome-focus-mode/
 ├── manifest.json          # extension configuration
 ├── popup.html / popup.js  # timer UI and site-list settings
 ├── content.js / style.css # page blocking
+├── lib/matching.js        # host matching logic (shared, unit-tested)
 ├── icons/                 # extension icons (16 / 48 / 128)
-└── scripts/gen-icons.js   # icon generator
+├── scripts/gen-icons.js   # icon generator
+└── test/                  # unit tests
 ```
 
 ## 🛠 Development
@@ -72,6 +74,12 @@ Regenerate the icons with:
 
 ```bash
 node scripts/gen-icons.js icons
+```
+
+Run the unit tests with:
+
+```bash
+node --test
 ```
 
 ## 📜 License
