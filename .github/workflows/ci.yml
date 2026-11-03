@@ -18,6 +18,28 @@ jobs:
       - name: Validate manifest.json
         run: node -e "JSON.parse(require('fs').readFileSync('manifest.json','utf8')); console.log('manifest.json OK')"
 
+      - name: Check files referenced by manifest.json exist
+        run: |
+          node -e '
+            const fs = require("fs");
+            const m = JSON.parse(fs.readFileSync("manifest.json", "utf8"));
+            const files = new Set();
+            for (const p of Object.values(m.icons || {})) files.add(p);
+            for (const p of Object.values((m.action && m.action.default_icon) || {})) files.add(p);
+            if (m.action && m.action.default_popup) files.add(m.action.default_popup);
+            for (const cs of m.content_scripts || []) {
+              for (const f of cs.js || []) files.add(f);
+              for (const f of cs.css || []) files.add(f);
+            }
+            const missing = [...files].filter((f) => !fs.existsSync(f));
+            if (missing.length) {
+              console.error("Missing files referenced by manifest.json:");
+              for (const f of missing) console.error("  " + f);
+              process.exit(1);
+            }
+            console.log("All " + files.size + " referenced file(s) exist");
+          '
+
       - name: Check JavaScript syntax
         run: |
           for f in *.js scripts/*.js; do
