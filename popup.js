@@ -62,7 +62,7 @@ function startTimer() {
   minutesInput.value = minutes;
 
   const endTime = Date.now() + minutes * 60000;
-  chrome.storage.local.set({ isActive: true, endTime }, () => {
+  chrome.storage.local.set({ isActive: true, endTime, lastMinutes: minutes }, () => {
     render(getRemainingMinutes(endTime));
     if (!intervalId) intervalId = setInterval(tick, 1000);
   });
@@ -122,11 +122,13 @@ function scheduleSave() {
 }
 
 function loadSettings() {
-  chrome.storage.local.get(["mode", "sites", "allowSites"], (data) => {
+  chrome.storage.local.get(["mode", "sites", "allowSites", "lastMinutes"], (data) => {
     currentMode = data.mode === "list" ? "list" : "all";
     modeSel.value = currentMode;
     const list = currentMode === "list" ? data.sites : data.allowSites;
     sitesEl.value = Array.isArray(list) ? list.join("\n") : "";
+    const last = clampMinutes(data.lastMinutes);
+    if (last) minutesInput.value = last;
     updateLabels();
   });
 }
