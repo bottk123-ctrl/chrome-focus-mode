@@ -61,7 +61,6 @@ let overlayPending = false;
 
 function mountOverlay(overlay) {
   if (document.body) {
-    document.body.innerHTML = "";
     document.body.appendChild(overlay);
     return;
   }
@@ -71,7 +70,6 @@ function mountOverlay(overlay) {
     () => {
       if (!overlayPending || !document.body) return;
       overlayPending = false;
-      document.body.innerHTML = "";
       document.body.appendChild(overlay);
     },
     { once: true }

@@ -1,3 +1,11 @@
+html.focus-mode-active {
+  overflow: hidden;
+}
+
+html.focus-mode-active body > *:not(#focus-mode-block) {
+  display: none !important;
+}
+
 #focus-mode-block {
   position: fixed;
   top: 0;
