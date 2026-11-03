@@ -118,7 +118,7 @@ function blockIfActive() {
     const active = data.isActive && Date.now() < (Number(data.endTime) || 0);
     if (active && isBlocked(host, data)) {
       showBlockScreen();
-    } else if (document.getElementById("focus-mode-block")) {
+    } else if (overlayPending || document.getElementById("focus-mode-block")) {
       unblock();
     }
   });
@@ -150,7 +150,11 @@ function stopPolling() {
 function unblock() {
   overlayPending = false;
   stopPolling();
-  if (document.getElementById("focus-mode-block")) location.reload();
+  const overlay = document.getElementById("focus-mode-block");
+  if (overlay) overlay.remove();
+  if (document.documentElement) {
+    document.documentElement.classList.remove("focus-mode-active");
+  }
 }
 
 blockIfActive();
