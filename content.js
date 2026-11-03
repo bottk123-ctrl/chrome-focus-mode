@@ -96,6 +96,16 @@ function showBlockScreen() {
   startPolling();
 }
 
+function formatRemaining(ms) {
+  if (ms >= 60000) {
+    return `${Math.ceil(ms / 60000)} мин`;
+  }
+  const total = Math.max(0, Math.ceil(ms / 1000));
+  const minutes = Math.floor(total / 60);
+  const seconds = total % 60;
+  return `${minutes}:${String(seconds).padStart(2, "0")}`;
+}
+
 function updateBlockTimer() {
   const el = document.getElementById("focus-mode-timer");
   if (!el) return;
@@ -105,8 +115,7 @@ function updateBlockTimer() {
       el.textContent = "";
       return;
     }
-    const remaining = Math.max(0, Math.ceil((endTime - Date.now()) / 60000));
-    el.textContent = `Осталось: ${remaining} мин`;
+    el.textContent = `Осталось: ${formatRemaining(endTime - Date.now())}`;
   });
 }
 
