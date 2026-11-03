@@ -13,7 +13,8 @@ reminder to get back to work — with a motivational quote and the remaining tim
 
 ## ✨ Features
 
-- **Focus timer** from 1 to 600 minutes, with a live countdown in the popup.
+- **Focus timer** from 1 to 600 minutes, with quick presets (15 / 25 / 45 / 60) and
+  a live countdown in the popup.
 - **Full-screen block page** with a random motivational quote and the remaining
   time.
 - **Two blocking modes** (see below).
@@ -33,7 +34,9 @@ reminder to get back to work — with a motivational quote and the remaining tim
 ## ▶ Usage
 
 - Click the Focus Mode icon.
-- Enter a number of minutes (1–600) and click **Start focus**.
+- Enter a number of minutes (1–600) and click **Start focus** — or use the quick
+  presets (15 / 25 / 45 / 60) and press **Enter** to start.
+- The last used duration is remembered between sessions.
 - While the timer is active, distracting sites show a red "Get back to work!"
   screen.
 - **Stop** ends the session early.
