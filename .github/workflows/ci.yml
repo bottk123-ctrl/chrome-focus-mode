@@ -47,7 +47,10 @@ jobs:
 
       - name: Check JavaScript syntax
         run: |
-          for f in *.js scripts/*.js; do
+          for f in *.js scripts/*.js lib/*.js test/*.js; do
             echo "checking $f"
             node --check "$f"
           done
+
+      - name: Run unit tests
+        run: node --test
