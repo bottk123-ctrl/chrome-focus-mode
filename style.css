@@ -20,6 +20,7 @@ html.focus-mode-active body > *:not(#focus-mode-block) {
   justify-content: center;
   text-align: center;
   font-family: -apple-system, Segoe UI, Roboto, sans-serif;
+  user-select: none;
 }
 
 #focus-mode-block .focus-mode-content {
