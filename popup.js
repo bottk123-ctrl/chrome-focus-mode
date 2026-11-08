@@ -89,6 +89,13 @@ function listKey(mode) {
   return mode === "list" ? "sites" : "allowSites";
 }
 
+function syncPresets() {
+  const current = Number(minutesInput.value);
+  presetsEl.querySelectorAll("button[data-minutes]").forEach((btn) => {
+    btn.setAttribute("aria-pressed", String(Number(btn.dataset.minutes) === current));
+  });
+}
+
 function parseList(text) {
   return text
     .split(/[\n,]/)
@@ -132,6 +139,7 @@ function loadSettings() {
     sitesEl.value = Array.isArray(list) ? list.join("\n") : "";
     const last = clampMinutes(data.lastMinutes);
     if (last) minutesInput.value = last;
+    syncPresets();
     updateLabels();
   });
 }
@@ -151,7 +159,9 @@ presetsEl.addEventListener("click", (e) => {
   if (!btn) return;
   minutesInput.value = btn.dataset.minutes;
   minutesInput.focus();
+  syncPresets();
 });
+minutesInput.addEventListener("input", syncPresets);
 
 modeSel.addEventListener("change", () => {
   saveCurrentList();
@@ -194,3 +204,4 @@ chrome.storage.onChanged.addListener((changes, area) => {
 });
 
 loadSettings();
+syncPresets();
