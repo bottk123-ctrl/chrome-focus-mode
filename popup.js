@@ -15,14 +15,16 @@ let intervalId = null;
 let currentMode = "all";
 let saveTimer = null;
 
+const { formatRemaining } = globalThis.FocusModeFormat;
+
 function getRemainingMinutes(endTime) {
   return Math.ceil((endTime - Date.now()) / 60000);
 }
 
-function render(remaining) {
-  statusEl.textContent = `Осталось: ${remaining} мин`;
+function render(endTime) {
+  statusEl.textContent = `Осталось: ${formatRemaining(endTime - Date.now())}`;
   statusEl.classList.add("active");
-  startBtn.textContent = `Включено (${remaining} мин)`;
+  startBtn.textContent = `Включено (${getRemainingMinutes(endTime)} мин)`;
   stopBtn.disabled = false;
 }
 
@@ -49,7 +51,7 @@ function tick() {
       renderIdle();
       return;
     }
-    render(remaining);
+    render(Number(data.endTime) || 0);
   });
 }
 
@@ -64,7 +66,7 @@ function startTimer() {
 
   const endTime = Date.now() + minutes * 60000;
   chrome.storage.local.set({ isActive: true, endTime, lastMinutes: minutes }, () => {
-    render(getRemainingMinutes(endTime));
+    render(endTime);
     if (!intervalId) intervalId = setInterval(tick, 1000);
   });
 }
@@ -165,7 +167,7 @@ modeSel.addEventListener("change", () => {
 
 chrome.storage.local.get(["isActive", "endTime"], (data) => {
   if (data.isActive && Number(data.endTime) > Date.now()) {
-    render(getRemainingMinutes(Number(data.endTime)));
+    render(Number(data.endTime));
     intervalId = setInterval(tick, 1000);
   } else {
     renderIdle();
@@ -179,7 +181,7 @@ chrome.storage.onChanged.addListener((changes, area) => {
   chrome.storage.local.get(["isActive", "endTime"], (data) => {
     const active = data.isActive && Number(data.endTime) > Date.now();
     if (active) {
-      render(getRemainingMinutes(Number(data.endTime)));
+      render(Number(data.endTime));
       if (!intervalId) intervalId = setInterval(tick, 1000);
     } else {
       if (intervalId) {
