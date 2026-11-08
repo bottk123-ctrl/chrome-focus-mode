@@ -63,6 +63,7 @@ chrome-focus-mode/
 ├── popup.html / popup.js  # timer UI and site-list settings
 ├── content.js / style.css # page blocking
 ├── lib/matching.js        # host matching logic (shared, unit-tested)
+├── lib/format.js          # remaining-time formatting (shared, unit-tested)
 ├── icons/                 # extension icons (16 / 48 / 128)
 ├── scripts/gen-icons.js   # icon generator
 └── test/                  # unit tests
