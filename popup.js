@@ -97,7 +97,7 @@ function syncPresets() {
 }
 
 function parseList(text) {
-  return text
+  const entries = text
     .split(/[\n,]/)
     .map((s) =>
       s
@@ -108,6 +108,7 @@ function parseList(text) {
         .replace(/\/.*$/, "")
     )
     .filter(Boolean);
+  return [...new Set(entries)];
 }
 
 function updateLabels() {
