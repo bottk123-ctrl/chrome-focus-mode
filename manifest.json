@@ -26,7 +26,7 @@
     {
       "matches": ["<all_urls>"],
       "run_at": "document_start",
-      "js": ["lib/matching.js", "content.js"],
+      "js": ["lib/matching.js", "lib/format.js", "content.js"],
       "css": ["style.css"]
     }
   ]

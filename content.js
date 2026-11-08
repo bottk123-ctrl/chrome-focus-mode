@@ -14,6 +14,7 @@ function randomQuote() {
 }
 
 const { isBlocked } = globalThis.FocusModeMatching;
+const { formatRemaining } = globalThis.FocusModeFormat;
 
 function markActive() {
   const root = document.documentElement;
@@ -69,16 +70,6 @@ function showBlockScreen() {
   mountOverlay(overlay);
   updateBlockTimer();
   startPolling();
-}
-
-function formatRemaining(ms) {
-  if (ms >= 60000) {
-    return `${Math.ceil(ms / 60000)} мин`;
-  }
-  const total = Math.max(0, Math.ceil(ms / 1000));
-  const minutes = Math.floor(total / 60);
-  const seconds = total % 60;
-  return `${minutes}:${String(seconds).padStart(2, "0")}`;
 }
 
 function updateBlockTimer() {
