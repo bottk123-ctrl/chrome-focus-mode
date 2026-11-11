@@ -15,6 +15,8 @@ reminder to get back to work — with a motivational quote and the remaining tim
 
 - **Focus timer** from 1 to 600 minutes, with quick presets (15 / 25 / 45 / 60) and
   a live countdown in the popup.
+- **Toolbar badge** shows the remaining minutes on the extension icon while a
+  session is active.
 - **Full-screen block page** with a random motivational quote and the remaining
   time.
 - **Two blocking modes** (see below).
@@ -60,13 +62,15 @@ hostname (`file://`, `about:blank`) are not blocked.
 ```
 chrome-focus-mode/
 ├── manifest.json          # extension configuration
+├── background.js          # service worker: toolbar badge with remaining time
 ├── popup.html / popup.js  # timer UI and site-list settings
 ├── content.js / style.css # page blocking
-├── lib/matching.js        # host matching logic (shared, unit-tested)
+├── lib/matching.js        # host matching + site-list parsing (shared, unit-tested)
 ├── lib/format.js          # remaining-time formatting (shared, unit-tested)
 ├── icons/                 # extension icons (16 / 48 / 128)
 ├── scripts/gen-icons.js   # icon generator
-└── test/                  # unit tests
+├── test/                  # unit tests
+└── package.json           # npm scripts (test / icons)
 ```
 
 ## 🛠 Development
@@ -81,6 +85,12 @@ Run the unit tests with:
 
 ```bash
 node --test
+```
+
+or via npm:
+
+```bash
+npm test
 ```
 
 ## 📜 License

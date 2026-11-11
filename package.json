@@ -1,0 +1,14 @@
+{
+  "name": "chrome-focus-mode",
+  "version": "1.1.0",
+  "private": true,
+  "description": "Chrome MV3 extension that blocks distracting sites during focus sessions",
+  "license": "MIT",
+  "scripts": {
+    "test": "node --test",
+    "icons": "node scripts/gen-icons.js icons"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

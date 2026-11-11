@@ -32,6 +32,7 @@ jobs:
             for (const p of Object.values(m.icons || {})) files.add(p);
             for (const p of Object.values((m.action && m.action.default_icon) || {})) files.add(p);
             if (m.action && m.action.default_popup) files.add(m.action.default_popup);
+            if (m.background && m.background.service_worker) files.add(m.background.service_worker);
             for (const cs of m.content_scripts || []) {
               for (const f of cs.js || []) files.add(f);
               for (const f of cs.css || []) files.add(f);
