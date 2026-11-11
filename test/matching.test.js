@@ -1,12 +1,22 @@
 const test = require("node:test");
 const assert = require("node:assert/strict");
-const { normalizeEntry, hostMatches, isBlocked } = require("../lib/matching.js");
+const { normalizeEntry, parseList, hostMatches, isBlocked } = require("../lib/matching.js");
 
 test("normalizeEntry strips protocol, www and path", () => {
   assert.equal(normalizeEntry("https://www.YouTube.com/watch?v=1"), "youtube.com");
   assert.equal(normalizeEntry("  Example.com  "), "example.com");
   assert.equal(normalizeEntry(""), "");
   assert.equal(normalizeEntry(undefined), "");
+});
+
+test("parseList splits on newlines and commas, normalizes and dedupes", () => {
+  assert.deepEqual(parseList("youtube.com, https://www.YouTube.com\n  m.facebook.com  "), [
+    "youtube.com",
+    "m.facebook.com",
+  ]);
+  assert.deepEqual(parseList(""), []);
+  assert.deepEqual(parseList(null), []);
+  assert.deepEqual(parseList("a.com\n\nb.com,"), ["a.com", "b.com"]);
 });
 
 test("hostMatches matches exact host and subdomains", () => {
@@ -33,4 +43,16 @@ test("isBlocked in all mode blocks everything except the allowlist", () => {
 test("isBlocked defaults to all mode and tolerates missing lists", () => {
   assert.equal(isBlocked("example.com", {}), true);
   assert.equal(isBlocked("example.com", { mode: "list" }), false);
+});
+
+test("hostMatches does not match a domain that merely ends with the entry", () => {
+  assert.equal(hostMatches("notyoutube.com", "youtube.com"), false);
+  assert.equal(hostMatches("youtube.com.evil.com", "youtube.com"), false);
+  assert.equal(hostMatches("sub.youtube.com", "youtube.com"), true);
+});
+
+test("isBlocked ignores empty entries and is case-insensitive", () => {
+  const data = { mode: "list", sites: ["", "  ", "YouTube.com"] };
+  assert.equal(isBlocked("m.youtube.com", data), true);
+  assert.equal(isBlocked("example.com", data), false);
 });

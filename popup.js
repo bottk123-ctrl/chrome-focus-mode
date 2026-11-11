@@ -16,6 +16,7 @@ let currentMode = "all";
 let saveTimer = null;
 
 const { formatRemaining } = globalThis.FocusModeFormat;
+const { parseList } = globalThis.FocusModeMatching;
 
 function getRemainingMinutes(endTime) {
   return Math.ceil((endTime - Date.now()) / 60000);
@@ -94,21 +95,6 @@ function syncPresets() {
   presetsEl.querySelectorAll("button[data-minutes]").forEach((btn) => {
     btn.setAttribute("aria-pressed", String(Number(btn.dataset.minutes) === current));
   });
-}
-
-function parseList(text) {
-  const entries = text
-    .split(/[\n,]/)
-    .map((s) =>
-      s
-        .trim()
-        .toLowerCase()
-        .replace(/^https?:\/\//, "")
-        .replace(/^www\./, "")
-        .replace(/\/.*$/, "")
-    )
-    .filter(Boolean);
-  return [...new Set(entries)];
 }
 
 function updateLabels() {
