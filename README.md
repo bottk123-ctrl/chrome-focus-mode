@@ -53,6 +53,11 @@ reminder to get back to work — with a motivational quote and the remaining tim
 The site list is edited in the popup (one per line, or comma-separated). Domains are
 entered without a protocol, e.g. `youtube.com`.
 
+Pasted URLs are cleaned up automatically: the protocol, `www.`, user-info, port, path,
+query string, fragment and a trailing dot are stripped, so `https://www.youtube.com/watch?v=1`
+becomes `youtube.com`. Entries are matched case-insensitively against the page host and
+its subdomains.
+
 Blocking kicks in as early as possible (`document_start`), so the "Get back to
 work!" screen appears before the distracting page renders. Pages without a
 hostname (`file://`, `about:blank`) are not blocked.
