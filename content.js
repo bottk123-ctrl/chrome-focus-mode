@@ -91,7 +91,12 @@ function showBlockScreen(end) {
 // Single-page sites sometimes re-render <body> wholesale, which drops our
 // overlay. Put it back if that happens while the session is still running.
 function ensureOverlayMounted() {
-  if (!overlayEl || overlayPending || overlayEl.isConnected) return;
+  if (!overlayEl || overlayPending) return;
+  // A page that wipes <body> usually resets <html> classes too.
+  if (document.documentElement) {
+    document.documentElement.classList.add("focus-mode-active");
+  }
+  if (overlayEl.isConnected) return;
   const parent = document.body || document.documentElement;
   if (parent) parent.appendChild(overlayEl);
 }
