@@ -9,6 +9,22 @@ test("normalizeEntry strips protocol, www and path", () => {
   assert.equal(normalizeEntry(undefined), "");
 });
 
+test("normalizeEntry handles ports, trailing dots, userinfo and fragments", () => {
+  assert.equal(normalizeEntry("example.com:8080"), "example.com");
+  assert.equal(normalizeEntry("example.com."), "example.com");
+  assert.equal(normalizeEntry("sub.example.com."), "sub.example.com");
+  assert.equal(normalizeEntry("user:pass@example.com"), "example.com");
+  assert.equal(normalizeEntry("http://user:pass@example.com:8080/x"), "example.com");
+  assert.equal(normalizeEntry("example.com#frag"), "example.com");
+  assert.equal(normalizeEntry("example.com?q=1"), "example.com");
+  assert.equal(normalizeEntry("ftp://files.example.com/dir"), "files.example.com");
+});
+
+test("hostMatches normalizes the host as well as the entry", () => {
+  assert.equal(hostMatches("WWW.Example.com.", "example.com"), true);
+  assert.equal(hostMatches("sub.example.com:443", "example.com"), true);
+});
+
 test("parseList splits on newlines and commas, normalizes and dedupes", () => {
   assert.deepEqual(parseList("youtube.com, https://www.YouTube.com\n  m.facebook.com  "), [
     "youtube.com",
