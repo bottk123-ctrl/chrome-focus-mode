@@ -34,6 +34,7 @@ function markActive() {
 }
 
 let overlayPending = false;
+let overlayEl = null;
 let endTime = 0;
 let tickId = null;
 
@@ -81,9 +82,18 @@ function showBlockScreen(end) {
       <p class="focus-mode-timer" id="focus-mode-timer"></p>
     </div>
   `;
+  overlayEl = overlay;
   mountOverlay(overlay);
   renderTimer();
   startTicking();
+}
+
+// Single-page sites sometimes re-render <body> wholesale, which drops our
+// overlay. Put it back if that happens while the session is still running.
+function ensureOverlayMounted() {
+  if (!overlayEl || overlayPending || overlayEl.isConnected) return;
+  const parent = document.body || document.documentElement;
+  if (parent) parent.appendChild(overlayEl);
 }
 
 function startTicking() {
@@ -104,6 +114,7 @@ function tick() {
     unblock(true);
     return;
   }
+  ensureOverlayMounted();
   renderTimer();
 }
 
@@ -125,8 +136,10 @@ function unblock(expired) {
   overlayPending = false;
   stopTicking();
   endTime = 0;
-  const overlay = document.getElementById("focus-mode-block");
-  if (overlay) overlay.remove();
+  if (overlayEl) {
+    if (overlayEl.isConnected) overlayEl.remove();
+    overlayEl = null;
+  }
   if (document.documentElement) {
     document.documentElement.classList.remove("focus-mode-active");
   }
