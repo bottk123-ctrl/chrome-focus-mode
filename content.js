@@ -144,8 +144,13 @@ function unblock(expired) {
     document.documentElement.classList.remove("focus-mode-active");
   }
   if (expired) {
-    chrome.storage.local.get(["isActive"], (data) => {
-      if (data.isActive) chrome.storage.local.set({ isActive: false, endTime: 0 });
+    chrome.storage.local.get(["isActive", "endTime"], (data) => {
+      const storedEnd = Number(data.endTime) || 0;
+      // Only clear the session we actually saw expire; a brand-new session
+      // started in the meantime must not be cancelled by this stale write.
+      if (data.isActive && storedEnd && storedEnd <= Date.now()) {
+        chrome.storage.local.set({ isActive: false, endTime: 0 });
+      }
     });
   }
 }
