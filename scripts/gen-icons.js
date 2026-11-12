@@ -58,8 +58,6 @@ function makeIcon(size) {
     const py = y + 0.5;
     const dx = px - cx;
     const dy = py - cy;
-    const insideSquare =
-      px >= 0 && px <= size && py >= 0 && py <= size;
     const rx = Math.abs(px - cx);
     const ry = Math.abs(py - cy);
     let inRounded = false;
