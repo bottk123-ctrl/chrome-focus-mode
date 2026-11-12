@@ -34,6 +34,8 @@ function markActive() {
 }
 
 let overlayPending = false;
+let endTime = 0;
+let tickId = null;
 
 function mountOverlay(overlay) {
   if (document.body) {
@@ -44,16 +46,28 @@ function mountOverlay(overlay) {
   document.addEventListener(
     "DOMContentLoaded",
     () => {
-      if (!overlayPending || !document.body) return;
+      if (!overlayPending) return;
       overlayPending = false;
-      document.body.appendChild(overlay);
+      if (document.body) document.body.appendChild(overlay);
+      renderTimer();
     },
     { once: true }
   );
 }
 
-function showBlockScreen() {
-  if (overlayPending || document.getElementById("focus-mode-block")) return;
+function renderTimer() {
+  const el = document.getElementById("focus-mode-timer");
+  if (!el) return;
+  el.textContent = endTime ? `Осталось: ${formatRemaining(endTime - Date.now())}` : "";
+}
+
+function showBlockScreen(end) {
+  endTime = end;
+  if (document.getElementById("focus-mode-block")) {
+    renderTimer();
+    return;
+  }
+  if (overlayPending) return;
 
   markActive();
 
@@ -68,21 +82,29 @@ function showBlockScreen() {
     </div>
   `;
   mountOverlay(overlay);
-  updateBlockTimer();
-  startPolling();
+  renderTimer();
+  startTicking();
 }
 
-function updateBlockTimer() {
-  const el = document.getElementById("focus-mode-timer");
-  if (!el) return;
-  chrome.storage.local.get(["endTime"], (data) => {
-    const endTime = Number(data.endTime) || 0;
-    if (!endTime) {
-      el.textContent = "";
-      return;
-    }
-    el.textContent = `Осталось: ${formatRemaining(endTime - Date.now())}`;
-  });
+function startTicking() {
+  if (tickId) return;
+  tickId = setInterval(tick, 1000);
+}
+
+function stopTicking() {
+  if (!tickId) return;
+  clearInterval(tickId);
+  tickId = null;
+}
+
+// The countdown is computed from the stored end time, so it no longer needs to
+// read chrome.storage every second. Storage is only read on session changes.
+function tick() {
+  if (!endTime || Date.now() >= endTime) {
+    unblock(true);
+    return;
+  }
+  renderTimer();
 }
 
 function blockIfActive() {
@@ -92,43 +114,26 @@ function blockIfActive() {
   chrome.storage.local.get(["isActive", "endTime", "mode", "sites", "allowSites"], (data) => {
     const active = data.isActive && Date.now() < (Number(data.endTime) || 0);
     if (active && isBlocked(host, data)) {
-      showBlockScreen();
-    } else if (overlayPending || document.getElementById("focus-mode-block")) {
-      unblock();
+      showBlockScreen(Number(data.endTime) || 0);
+    } else {
+      unblock(false);
     }
   });
 }
 
-let pollId = null;
-
-function startPolling() {
-  if (pollId) return;
-  pollId = setInterval(() => {
-    chrome.storage.local.get(["isActive", "endTime"], (data) => {
-      const active = data.isActive && Date.now() < (Number(data.endTime) || 0);
-      if (!active) {
-        if (data.isActive) chrome.storage.local.set({ isActive: false, endTime: 0 });
-        unblock();
-        return;
-      }
-      updateBlockTimer();
-    });
-  }, 1000);
-}
-
-function stopPolling() {
-  if (!pollId) return;
-  clearInterval(pollId);
-  pollId = null;
-}
-
-function unblock() {
+function unblock(expired) {
   overlayPending = false;
-  stopPolling();
+  stopTicking();
+  endTime = 0;
   const overlay = document.getElementById("focus-mode-block");
   if (overlay) overlay.remove();
   if (document.documentElement) {
     document.documentElement.classList.remove("focus-mode-active");
+  }
+  if (expired) {
+    chrome.storage.local.get(["isActive"], (data) => {
+      if (data.isActive) chrome.storage.local.set({ isActive: false, endTime: 0 });
+    });
   }
 }
 
