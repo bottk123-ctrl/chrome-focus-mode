@@ -8,15 +8,14 @@
 A Chrome extension (**Manifest V3**) that blocks distracting sites during study or
 work sessions. Start a timer and any site on your blocklist shows a full-screen
 reminder to get back to work — with a motivational quote and the remaining time.
-
-> 📸 *Add a screenshot of the popup and the block screen here.*
+The popup UI is in Russian.
 
 ## ✨ Features
 
 - **Focus timer** from 1 to 600 minutes, with quick presets (15 / 25 / 45 / 60) and
   a live countdown in the popup.
-- **Toolbar badge** shows the remaining minutes on the extension icon while a
-  session is active.
+- **Toolbar badge** shows the remaining time on the extension icon while a
+  session is active (`25м`, or seconds during the last minute).
 - **Full-screen block page** with a random motivational quote and the remaining
   time.
 - **Two blocking modes** (see below).
@@ -50,8 +49,8 @@ reminder to get back to work — with a motivational quote and the remaining tim
 - **List only** — blocks only the listed sites and their subdomains. Great for
   removing specific distracting services.
 
-The site list is edited in the popup (one per line, or comma-separated). Domains are
-entered without a protocol, e.g. `youtube.com`.
+The site list is edited in the popup (one per line, or comma-separated) and saved
+automatically as you type. Domains are entered without a protocol, e.g. `youtube.com`.
 
 Pasted URLs are cleaned up automatically: the protocol, `www.`, user-info, port, path,
 query string, fragment and a trailing dot are stripped, so `https://www.youtube.com/watch?v=1`
@@ -75,10 +74,13 @@ chrome-focus-mode/
 ├── icons/                 # extension icons (16 / 48 / 128)
 ├── scripts/gen-icons.js   # icon generator
 ├── test/                  # unit tests
+├── .github/workflows/     # CI (runs the tests)
 └── package.json           # npm scripts (test / icons)
 ```
 
 ## 🛠 Development
+
+Requires Node.js 18 or newer.
 
 Regenerate the icons with:
 
