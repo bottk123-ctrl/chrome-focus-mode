@@ -15,7 +15,7 @@ The popup UI is in Russian.
 - **Focus timer** from 1 to 600 minutes, with quick presets (15 / 25 / 45 / 60) and
   a live countdown in the popup.
 - **Toolbar badge** shows the remaining time on the extension icon while a
-  session is active (`25м`, or seconds during the last minute).
+  session is active (`25м`), refreshed once a minute.
 - **Full-screen block page** with a random motivational quote and the remaining
   time.
 - **Two blocking modes** (see below).
