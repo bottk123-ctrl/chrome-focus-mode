@@ -66,7 +66,7 @@ hostname (`file://`, `about:blank`) are not blocked.
 ```
 chrome-focus-mode/
 ├── manifest.json          # extension configuration
-├── background.js          # service worker: toolbar badge with remaining time
+├── background.js          # servic worker: toolbar badge with remaining time
 ├── popup.html / popup.js  # timer UI and site-list settings
 ├── content.js / style.css # page blocking
 ├── lib/matching.js        # host matching + site-list parsing (shared, unit-tested)
